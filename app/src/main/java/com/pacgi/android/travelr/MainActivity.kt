@@ -58,21 +58,54 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(16.dp)
                     ) {
-                        TextField(value = searchText, onValueChange = viewModel::_onSearchTextChange,
+                        TextField(value = searchText,
+                            onValueChange = viewModel::_onSearchTextChange,
                             modifier = Modifier.fillMaxWidth(),
-                            placeholder = {Text(text = "Where to next?")})
+                            placeholder = { Text(text = "Search") })
                         Spacer(modifier = Modifier.height(16.dp))
-                        LazyColumn(modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)) {
-                            items(destinations){destination -> Text(
-                                text= destination.destName,
-                                style = MaterialTheme.typography.titleLarge,
+                        Text(
+                            text = "Upcoming",
+                            style = MaterialTheme.typography.headlineMedium,
+                            modifier = Modifier
+                                .padding(vertical = 20.dp)
+                        )
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                        ) {
+                            val notVisited = destinations.filter{it.nextVisit != ""}
+                            items(notVisited) { destination ->
+                                                Text(
+                                                    text = destination.destName,
+                                                    style = MaterialTheme.typography.titleLarge,
+                                                    modifier = Modifier
+                                                        .padding()
+                                                )
+                        }
+                    }
+                        Text(
+                            text = "Bucket List",
+                            style = MaterialTheme.typography.headlineMedium,
+                            modifier = Modifier
+                                .padding(vertical = 20.dp)
+                        )
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                        ) {
+                            val notVisited = destinations.filter{it.nextVisit == ""}
+                            items(notVisited) { destination ->
+                                Text(
+                                    text = destination.destName,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    modifier = Modifier
+                                        .padding()
                                 )
                             }
                         }
-                    }
-                }pra
+                }
             }
         }
     }
@@ -111,3 +144,5 @@ fun GreetingPreview() {
         }
     }
 }
+}
+
