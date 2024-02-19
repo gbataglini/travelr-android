@@ -30,24 +30,33 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             TravelrTheme {
                 val viewModel = viewModel<MainViewModel>()
-                val searchText by viewModel.searchText.collectAsState()
                 val destinations by viewModel.destinations.collectAsState()
-                val isSearching by viewModel.isSearching.collectAsState()
+                var text by remember {mutableStateOf("")};
+                var active by remember { mutableStateOf(false )}
 
-                // A surface container using the 'background' color from the theme
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -58,10 +67,22 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(16.dp)
                     ) {
-                        TextField(value = searchText,
-                            onValueChange = viewModel::_onSearchTextChange,
+                        SearchBar(
+                            query = text,
+                            onQueryChange = {text = it},
+                            onSearch = {
+                                active = false
+                            },
+                            active = active,
+                            onActiveChange = {
+                                             active = it
+                            },
                             modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text(text = "Search") })
+                            placeholder = { Text(text = "Search") },
+                            content = { Text(text = "hi")}
+                        )
+
+
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "Upcoming",
